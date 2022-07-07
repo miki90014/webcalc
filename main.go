@@ -8,6 +8,8 @@ import (
 	"konta.monika/webcalc/calc"
 
 	"github.com/gorilla/mux"
+	//"github.com/rs/zerolog"
+	//"github.com/rs/zerolog/log"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -25,9 +27,9 @@ func handleRequest() {
 	router.HandleFunc("/factorial/{a}", calc.Fac).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8000", router))
+	//Log.Fatal()
 }
 
 func main() {
 	handleRequest()
-	//fmt.Println("Hello world")
 }
