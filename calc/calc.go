@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func returnAB(w http.ResponseWriter, r *http.Request) (float64, float64) {
+func returnAB(w http.ResponseWriter, r *http.Request) (float64, float64, error, error) {
 	vars := mux.Vars(r)
 	a := vars["a"]
 	b := vars["b"]
@@ -23,10 +23,10 @@ func returnAB(w http.ResponseWriter, r *http.Request) (float64, float64) {
 		log.Error().Err(errors.New("400")).Msg("Bad Request")
 	}
 
-	return floatA, floatB
+	return floatA, floatB, errA, errB
 }
 
-func returnA(w http.ResponseWriter, r *http.Request) int {
+func returnA(w http.ResponseWriter, r *http.Request) (int, error) {
 	vars := mux.Vars(r)
 	a := vars["a"]
 	intA, err := strconv.Atoi(a)
@@ -36,29 +36,33 @@ func returnA(w http.ResponseWriter, r *http.Request) int {
 		log.Error().Err(errors.New("400")).Msg("Bad Request")
 	}
 
-	return intA
+	return intA, err
 }
 
 func Sum(w http.ResponseWriter, r *http.Request) {
-	a, b := returnAB(w, r)
-	log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
-	a += b
-	fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
+	a, b, errA, errB := returnAB(w, r)
+	if errA == nil && errB == nil {
+		log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
+		a += b
+		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
+	}
 }
 
 func Diff(w http.ResponseWriter, r *http.Request) {
-	a, b := returnAB(w, r)
-	log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
-	a -= b
-	fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
+	a, b, errA, errB := returnAB(w, r)
+	if errA == nil && errB == nil {
+		log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
+		a -= b
+		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
+	}
 }
 
 func Div(w http.ResponseWriter, r *http.Request) {
-	a, b := returnAB(w, r)
+	a, b, errA, errB := returnAB(w, r)
 	if b == 0 {
 		http.Error(w, "400 Bad Request", http.StatusNotFound)
 		log.Error().Err(errors.New("400")).Msg("Bad Request")
-	} else {
+	} else if errA == nil || errB == nil {
 		log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
 		a /= b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
@@ -66,18 +70,22 @@ func Div(w http.ResponseWriter, r *http.Request) {
 }
 
 func Mul(w http.ResponseWriter, r *http.Request) {
-	a, b := returnAB(w, r)
-	log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
-	a *= b
-	fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
+	a, b, errA, errB := returnAB(w, r)
+	if errA == nil && errB == nil {
+		log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
+		a *= b
+		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
+	}
 }
 
 func Fac(w http.ResponseWriter, r *http.Request) {
-	a := returnA(w, r)
-	log.Info().Msgf("IP: %s, URL: %s, para: %s", r.Host, r.URL.Path, strconv.Itoa(a))
-	result := 1
-	for i := 2; i <= a; i++ {
-		result *= i
+	a, err := returnA(w, r)
+	if err == nil {
+		log.Info().Msgf("IP: %s, URL: %s, para: %s", r.Host, r.URL.Path, strconv.Itoa(a))
+		result := 1
+		for i := 2; i <= a; i++ {
+			result *= i
+		}
+		fmt.Fprintf(w, strconv.Itoa(result))
 	}
-	fmt.Fprintf(w, strconv.Itoa(result))
 }
