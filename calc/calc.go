@@ -43,7 +43,6 @@ func Sum(w http.ResponseWriter, r *http.Request) {
 	a, b := returnAB(w, r)
 	log.Info().Str(strconv.FormatFloat(a, 'f', -1, 64), strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, URL: %s", r.Host, r.URL.Path)
 	a += b
-	//Str("IP", r.Host, "URL", r.URL.Path)
 	fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
 }
 

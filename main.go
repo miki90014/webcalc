@@ -26,7 +26,7 @@ func handleRequest() {
 	router.HandleFunc("/div/{a}/{b}", calc.Div).Methods("GET")
 	router.HandleFunc("/factorial/{a}", calc.Fac).Methods("GET")
 
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":8080", router))
 	//Log.Fatal()
 }
 
