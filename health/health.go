@@ -1,26 +1,32 @@
 package health
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Icikowski/kubeprobes"
+	"github.com/rs/zerolog/log"
 )
 
-func Live(w http.ResponseWriter, r *http.Request) {
-	/*live := kubeprobes.NewStatefulProbe()
-	kubeprobes.WithLivenessProbes(live.GetProbeFunction())*/
-	//live := kubeprobes.NewStatefulProbe()
-	//err := kubeprobes.ProbeFunction()
-	/*if sq.isAllGreen() {
-		w.WriteHeader(http.StatusOK)
+var Live = kubeprobes.NewStatefulProbe()
+var Ready = kubeprobes.NewStatefulProbe()
+
+func Liveness(w http.ResponseWriter, r *http.Request) {
+	err := Live.GetProbeFunction()
+	if err != nil {
+		http.Error(w, "503 Service Unavailable", http.StatusServiceUnavailable)
+		log.Error().Err(errors.New("503")).Msgf("Service Unavailable: %s", err)
 	} else {
-		w.WriteHeader(http.StatusServiceUnavailable)
+		(w).WriteHeader(http.StatusOK)
 	}
-	//kubeprobes.WithLivenessProbes(live.GetProbeFunction())
-	*/
 }
 
-func Ready(w http.ResponseWriter, r *http.Request) {
-	ready := kubeprobes.NewStatefulProbe()
-	kubeprobes.WithReadinessProbes(ready.GetProbeFunction())
+func Readiness(w http.ResponseWriter, r *http.Request) {
+	err := Ready.GetProbeFunction()
+	if err != nil {
+		http.Error(w, "503 Service Unavailable", http.StatusServiceUnavailable)
+		log.Error().Err(errors.New("503")).Msgf("Service Unavailable: %s", err)
+	} else {
+		(w).WriteHeader(http.StatusOK)
+	}
 }

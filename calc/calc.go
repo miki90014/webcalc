@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/rs/zerolog/log"
+	"konta.monika/webcalc/health"
 
 	"github.com/gorilla/mux"
 )
@@ -21,7 +22,6 @@ func returnAB(w http.ResponseWriter, r *http.Request) (float64, float64, error, 
 
 	if errA != nil || errB != nil {
 		http.Error(w, "400 Bad Request", http.StatusBadRequest)
-		fmt.Print(errA, errB)
 		log.Error().Err(errors.New("400")).Msgf("Bad Request, err: %s, %s", errA, errB)
 	}
 
@@ -102,9 +102,15 @@ func Fac(w http.ResponseWriter, r *http.Request) {
 		ip, port, _ := net.SplitHostPort(r.RemoteAddr)
 		log.Info().Str("a", strconv.Itoa(a)).Msgf("IP: %s, port: %s, URL: %s", ip, port, r.URL.Path)
 		result := 1
+
+		health.Ready.MarkAsDown()
+
 		for i := 2; i <= a; i++ {
 			result *= i
 		}
+
+		health.Ready.MarkAsUp()
+
 		fmt.Fprintf(w, strconv.Itoa(result))
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
