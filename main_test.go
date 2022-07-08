@@ -26,7 +26,7 @@ func TestAdd(t *testing.T) {
 	defer res.Body.Close()
 	data, _ := ioutil.ReadAll(res.Body)
 	if string(data) != "9" {
-		t.Errorf("expected 9.0000 got %v", string(data))
+		t.Errorf("Expected 9.0000 got %v", string(data))
 	}
 
 	req, err = http.NewRequest("GET", "/sum", nil)
@@ -60,7 +60,7 @@ func TestMul(t *testing.T) {
 	defer res.Body.Close()
 	data, _ := ioutil.ReadAll(res.Body)
 	if string(data) != "3.1639999999999997" {
-		t.Errorf("expected 3.1639999999999997 got %v", string(data))
+		t.Errorf("Expected 3.1639999999999997 got %v", string(data))
 	}
 
 	req, err = http.NewRequest("GET", "/mul", nil)
@@ -95,7 +95,7 @@ func TestDiv(t *testing.T) {
 	defer res.Body.Close()
 	data, _ := ioutil.ReadAll(res.Body)
 	if string(data) != "1.5000" {
-		t.Errorf("expected 1.5000 got %v", string(data))
+		t.Errorf("Expected 1.5000 got %v", string(data))
 	}
 
 	req, err = http.NewRequest("GET", "/div", nil)
@@ -129,7 +129,7 @@ func TestDiff(t *testing.T) {
 	defer res.Body.Close()
 	data, _ := ioutil.ReadAll(res.Body)
 	if string(data) != "0.7999999999999998" {
-		t.Errorf("expected 0.7999999999999998 got %v", string(data))
+		t.Errorf("Expected 0.7999999999999998 got %v", string(data))
 	}
 
 	req, err = http.NewRequest("GET", "/diff", nil)
@@ -181,6 +181,6 @@ func TestFac(t *testing.T) {
 
 func checkStautsCode(res *http.Response, status int, t *testing.T) {
 	if res.StatusCode != http.StatusBadRequest {
-		t.Errorf("expected 400 Bad Request got %v", res.StatusCode)
+		t.Errorf("Expected 400 Bad Request got %v", res.StatusCode)
 	}
 }

@@ -54,9 +54,10 @@ func Sum(w http.ResponseWriter, r *http.Request) {
 		logAB(a, b, r, &w)
 		a += b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
+
+	w.WriteHeader(http.StatusBadRequest)
 
 }
 
@@ -67,9 +68,10 @@ func Diff(w http.ResponseWriter, r *http.Request) {
 		logAB(a, b, r, &w)
 		a -= b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
+
+	w.WriteHeader(http.StatusBadRequest)
 }
 
 //A Div represents a division of two values.
@@ -78,13 +80,15 @@ func Div(w http.ResponseWriter, r *http.Request) {
 	if b == 0 {
 		http.Error(w, "400 Bad Request", http.StatusNotFound)
 		log.Error().Err(errors.New("400")).Msg("Bad Request")
+		return
 	} else if errA == nil || errB == nil {
 		logAB(a, b, r, &w)
 		a /= b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', 4, 64))
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
+
+	w.WriteHeader(http.StatusBadRequest)
 }
 
 //A Mul represents a multiplication of two values
@@ -94,9 +98,10 @@ func Mul(w http.ResponseWriter, r *http.Request) {
 		logAB(a, b, r, &w)
 		a *= b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
+
+	w.WriteHeader(http.StatusBadRequest)
 }
 
 //A Fac represents a factorial of one value
@@ -117,7 +122,7 @@ func Fac(w http.ResponseWriter, r *http.Request) {
 		health.Ready.MarkAsUp()
 
 		fmt.Fprintf(w, strconv.Itoa(result))
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
+	w.WriteHeader(http.StatusBadRequest)
 }
