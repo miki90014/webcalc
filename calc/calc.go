@@ -52,7 +52,7 @@ func Sum(w http.ResponseWriter, r *http.Request) {
 	if errA == nil && errB == nil {
 		LogAB(a, b, r, &w)
 		a += b
-		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', 4, 64))
+		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 	}
@@ -64,7 +64,7 @@ func Diff(w http.ResponseWriter, r *http.Request) {
 	if errA == nil && errB == nil {
 		LogAB(a, b, r, &w)
 		a -= b
-		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', 4, 64))
+		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 	}
@@ -89,7 +89,7 @@ func Mul(w http.ResponseWriter, r *http.Request) {
 	if errA == nil && errB == nil {
 		LogAB(a, b, r, &w)
 		a *= b
-		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', 4, 64))
+		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 	}

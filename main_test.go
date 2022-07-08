@@ -25,7 +25,7 @@ func TestAdd(t *testing.T) {
 	res := w.Result()
 	defer res.Body.Close()
 	data, _ := ioutil.ReadAll(res.Body)
-	if string(data) != "9.0000" {
+	if string(data) != "9" {
 		t.Errorf("expected 9.0000 got %v", string(data))
 	}
 
@@ -59,8 +59,8 @@ func TestMul(t *testing.T) {
 	res := w.Result()
 	defer res.Body.Close()
 	data, _ := ioutil.ReadAll(res.Body)
-	if string(data) != "3.1640" {
-		t.Errorf("expected 3.1640 got %v", string(data))
+	if string(data) != "3.1639999999999997" {
+		t.Errorf("expected 3.1639999999999997 got %v", string(data))
 	}
 
 	req, err = http.NewRequest("GET", "/mul", nil)
@@ -128,8 +128,8 @@ func TestDiff(t *testing.T) {
 	res := w.Result()
 	defer res.Body.Close()
 	data, _ := ioutil.ReadAll(res.Body)
-	if string(data) != "0.8000" {
-		t.Errorf("expected 0.8000 got %v", string(data))
+	if string(data) != "0.7999999999999998" {
+		t.Errorf("expected 0.7999999999999998 got %v", string(data))
 	}
 
 	req, err = http.NewRequest("GET", "/diff", nil)
