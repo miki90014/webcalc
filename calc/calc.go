@@ -41,16 +41,17 @@ func returnA(w http.ResponseWriter, r *http.Request) (int, error) {
 	return intA, err
 }
 
-func LogAB(a float64, b float64, r *http.Request, w *http.ResponseWriter) {
+func logAB(a float64, b float64, r *http.Request, w *http.ResponseWriter) {
 	ip, port, _ := net.SplitHostPort(r.RemoteAddr)
 	log.Info().Str("a", strconv.FormatFloat(a, 'f', -1, 64)).Str("b", strconv.FormatFloat(b, 'f', -1, 64)).Msgf("IP: %s, port: %s, URL: %s", ip, port, r.URL.Path)
 	(*w).WriteHeader(http.StatusOK)
 }
 
+// A Sum represents a summarize of two values.
 func Sum(w http.ResponseWriter, r *http.Request) {
 	a, b, errA, errB := returnAB(w, r)
 	if errA == nil && errB == nil {
-		LogAB(a, b, r, &w)
+		logAB(a, b, r, &w)
 		a += b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
 	} else {
@@ -59,10 +60,11 @@ func Sum(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// A Diff represents a diffrence of two values.
 func Diff(w http.ResponseWriter, r *http.Request) {
 	a, b, errA, errB := returnAB(w, r)
 	if errA == nil && errB == nil {
-		LogAB(a, b, r, &w)
+		logAB(a, b, r, &w)
 		a -= b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
 	} else {
@@ -70,13 +72,14 @@ func Diff(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//A Div represents a division of two values.
 func Div(w http.ResponseWriter, r *http.Request) {
 	a, b, errA, errB := returnAB(w, r)
 	if b == 0 {
 		http.Error(w, "400 Bad Request", http.StatusNotFound)
 		log.Error().Err(errors.New("400")).Msg("Bad Request")
 	} else if errA == nil || errB == nil {
-		LogAB(a, b, r, &w)
+		logAB(a, b, r, &w)
 		a /= b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', 4, 64))
 	} else {
@@ -84,10 +87,11 @@ func Div(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//A Mul represents a multiplication of two values
 func Mul(w http.ResponseWriter, r *http.Request) {
 	a, b, errA, errB := returnAB(w, r)
 	if errA == nil && errB == nil {
-		LogAB(a, b, r, &w)
+		logAB(a, b, r, &w)
 		a *= b
 		fmt.Fprintf(w, strconv.FormatFloat(a, 'f', -1, 64))
 	} else {
@@ -95,6 +99,7 @@ func Mul(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//A Fac represents a factorial of one value
 func Fac(w http.ResponseWriter, r *http.Request) {
 	a, err := returnA(w, r)
 	if err == nil {

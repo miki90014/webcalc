@@ -10,9 +10,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+//Live represents a kubernetees probe of lievness probe.
 var Live = kubeprobes.NewStatefulProbe()
+
+//Ready represents a kubernetees probe of lievness probe.
 var Ready = kubeprobes.NewStatefulProbe()
 
+//A Liveness represents a lievness status of probe.
 func Liveness(w http.ResponseWriter, r *http.Request) {
 	err := Live.GetProbeFunction()
 	if err != nil {
@@ -23,6 +27,7 @@ func Liveness(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//A Readiness represents a readiness status of probe.
 func Readiness(w http.ResponseWriter, r *http.Request) {
 	err := Ready.GetProbeFunction()
 	if err != nil {
@@ -33,6 +38,7 @@ func Readiness(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//A CheckServer check server status and returns 500 error when it's down.
 func CheckServerStatus() {
 	time.Sleep(5 * time.Second)
 	_, err := http.NewRequest("GET", "/", nil)
