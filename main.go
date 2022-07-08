@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -14,7 +13,7 @@ import (
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Endpoint called: homePage()")
+
 }
 
 func handleRequest() {
@@ -51,9 +50,14 @@ func handleRequest() {
 		wg.Done()
 	}()
 
+	go func() {
+		for {
+			health.CheckServerStatus()
+		}
+	}()
+
 	health.Live.MarkAsUp()
 	health.Ready.MarkAsUp()
-
 	wg.Wait()
 
 }
