@@ -74,15 +74,19 @@ func Diff(w http.ResponseWriter, r *http.Request) {
 //Div represents a division of two values.
 func Div(w http.ResponseWriter, r *http.Request) {
 	a, b, errA, errB := returnAB(w, r)
-	if errA == nil || errB == nil {
+	if errA == nil && errB == nil {
 		logAB(a, b, r, &w)
-		a /= b
-		fmt.Fprint(w, strconv.FormatFloat(a, 'f', 4, 64))
-		return
-	} else if b == 0 {
-		http.Error(w, "400 Bad Request", http.StatusNotFound)
-		log.Error().Err(errors.New("400")).Msg("Bad Request")
-		return
+
+		if b != 0 {
+			a /= b
+			fmt.Fprint(w, strconv.FormatFloat(a, 'f', 4, 64))
+			return
+		} else {
+
+			http.Error(w, "400 Bad Request", http.StatusBadRequest)
+			log.Error().Err(errors.New("400")).Msg("Bad Request")
+			return
+		}
 	}
 
 	w.WriteHeader(http.StatusBadRequest)
