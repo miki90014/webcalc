@@ -18,7 +18,6 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func handleRequest() {
 	router := mux.NewRouter().StrictSlash(true)
-	router2 := mux.NewRouter().StrictSlash(true)
 
 	kp := kubeprobes.New(
 		kubeprobes.WithLivenessProbes(health.Live.GetProbeFunction()),
@@ -32,9 +31,6 @@ func handleRequest() {
 	router.HandleFunc("/div/{a}/{b}", calc.Div).Methods("GET")
 	router.HandleFunc("/factorial/{a}", calc.Fac).Methods("GET")
 
-	router2.HandleFunc("/live", health.Liveness).Methods("GET")
-	router2.HandleFunc("/ready", health.Readiness).Methods("GET")
-
 	wg := new(sync.WaitGroup)
 
 	wg.Add(2)
@@ -44,16 +40,14 @@ func handleRequest() {
 		wg.Done()
 	}()
 
-	go func() {
-		log.Fatal(http.ListenAndServe(":8081", kp))
-		log.Fatal(http.ListenAndServe(":8081", router2))
-		wg.Done()
-	}()
+	probes := &http.Server{
+		Addr:    ":8081",
+		Handler: kp,
+	}
 
 	go func() {
-		for {
-			health.CheckServerStatus()
-		}
+		log.Fatal(probes.ListenAndServe())
+		wg.Done()
 	}()
 
 	health.Live.MarkAsUp()
