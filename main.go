@@ -8,7 +8,6 @@ import (
 	"konta.monika/webcalc/calc"
 	"konta.monika/webcalc/health"
 
-	"github.com/Icikowski/kubeprobes"
 	"github.com/gorilla/mux"
 )
 
@@ -16,19 +15,14 @@ func handleRequest() {
 	router := mux.NewRouter().StrictSlash(true)
 	router2 := mux.NewRouter().StrictSlash(true)
 
-	kp := kubeprobes.New(
-		kubeprobes.WithLivenessProbes(health.Live.GetProbeFunction()),
-		kubeprobes.WithReadinessProbes(health.Ready.GetProbeFunction()),
-	)
-
 	router.HandleFunc("/sum/{a}/{b}", calc.Sum).Methods("GET")
 	router.HandleFunc("/diff/{a}/{b}", calc.Diff).Methods("GET")
 	router.HandleFunc("/mul/{a}/{b}", calc.Mul).Methods("GET")
 	router.HandleFunc("/div/{a}/{b}", calc.Div).Methods("GET")
 	router.HandleFunc("/factorial/{a}", calc.Fac).Methods("GET")
 
-	router2.HandleFunc("/live", kp.ServeHTTP).Methods("GET")
-	router2.HandleFunc("/ready", kp.ServeHTTP).Methods("GET")
+	router2.HandleFunc("/live", health.Kp.ServeHTTP).Methods("GET")
+	router2.HandleFunc("/ready", health.Kp.ServeHTTP).Methods("GET")
 
 	wg := new(sync.WaitGroup)
 

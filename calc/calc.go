@@ -82,7 +82,6 @@ func Div(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w, strconv.FormatFloat(a, 'f', 4, 64))
 			return
 		} else {
-
 			http.Error(w, "400 Bad Request", http.StatusBadRequest)
 			log.Error().Err(errors.New("400")).Msg("Bad Request")
 			return
