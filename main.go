@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func handleRequest() {
+func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router2 := mux.NewRouter().StrictSlash(true)
 
@@ -41,9 +41,4 @@ func handleRequest() {
 	health.Live.MarkAsUp()
 	health.Ready.MarkAsUp()
 	wg.Wait()
-
-}
-
-func main() {
-	handleRequest()
 }
