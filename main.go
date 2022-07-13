@@ -12,14 +12,14 @@ import (
 )
 
 func main() {
-	router := mux.NewRouter().StrictSlash(true)
+	router1 := mux.NewRouter().StrictSlash(true)
 	router2 := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/sum/{a}/{b}", calc.Sum).Methods("GET")
-	router.HandleFunc("/diff/{a}/{b}", calc.Diff).Methods("GET")
-	router.HandleFunc("/mul/{a}/{b}", calc.Mul).Methods("GET")
-	router.HandleFunc("/div/{a}/{b}", calc.Div).Methods("GET")
-	router.HandleFunc("/factorial/{a}", calc.Fac).Methods("GET")
+	router1.HandleFunc("/sum/{a}/{b}", calc.Sum).Methods("GET")
+	router1.HandleFunc("/diff/{a}/{b}", calc.Diff).Methods("GET")
+	router1.HandleFunc("/mul/{a}/{b}", calc.Mul).Methods("GET")
+	router1.HandleFunc("/div/{a}/{b}", calc.Div).Methods("GET")
+	router1.HandleFunc("/factorial/{a}", calc.Fac).Methods("GET")
 
 	router2.HandleFunc("/live", health.Kp.ServeHTTP).Methods("GET")
 	router2.HandleFunc("/ready", health.Kp.ServeHTTP).Methods("GET")
@@ -29,7 +29,7 @@ func main() {
 	wg.Add(2)
 
 	go func() {
-		log.Fatal(http.ListenAndServe(":8080", router))
+		log.Fatal(http.ListenAndServe(":8080", router1))
 		wg.Done()
 	}()
 
